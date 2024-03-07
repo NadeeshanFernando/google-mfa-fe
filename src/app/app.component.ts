@@ -13,44 +13,45 @@ export class AppComponent implements OnInit {
   title = 'mfa';
   public loginForm!: FormGroup;
   public validateCodeForm!: FormGroup;
-  user!:User;
-  msg!:any;
-  validateCodeRes!:any;
+  user!: User;
+  msg!: any;
+  validateCodeRes!: any;
   qrImageData: any;
 
   constructor(public toastr: ToastrService,
     private formBuilder: FormBuilder,
     private loginService: LoginService
-    ) { }
+  ) { }
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
       username: [''],
       password: ['']
-      
+
     });
     this.validateCodeForm = this.formBuilder.group({
-      code: [''], 
+      code: [''],
     });
     this.user = new User();
   }
 
   login() {
-        this.loginService.login(this.loginForm.value).subscribe(
-            (response) => {
-                this.msg = "Login Success!"
-                this.generateQR();
-            },
-            (error) => {
-                console.error(error);
-                if (error.status === 401) {
-                    this.msg = "Invalid username and password!"
-                } 
-                else {
-                  this.msg = "Error Occurred!"
-                }
-            }
-        );
+    this.qrImageData = ''
+    this.loginService.login(this.loginForm.value).subscribe(
+      (response) => {
+        this.msg = "Login Success!"
+        this.generateQR();
+      },
+      (error) => {
+        console.error(error);
+        if (error.status === 401) {
+          this.msg = "Invalid username and password!"
+        }
+        else {
+          this.msg = "Error Occurred!"
+        }
+      }
+    );
   }
 
   generateQR() {
@@ -66,21 +67,21 @@ export class AppComponent implements OnInit {
     );
   }
 
-  ValidateCode(){
+  ValidateCode() {
     this.loginService.validateCode(this.validateCodeForm.value).subscribe(
       (response) => {
-          this.validateCodeRes = response.access_token
+        this.validateCodeRes = response.access_token
       },
       (error) => {
-          console.error(error);
-          if (error.status === 401) {
-              this.validateCodeRes = "Invalid code!"
-          } 
-          else {
-            this.validateCodeRes = "Error Occurred!"
-          }
+        console.error(error);
+        if (error.status === 401) {
+          this.validateCodeRes = "Invalid code!"
+        }
+        else {
+          this.validateCodeRes = "Error Occurred!"
+        }
       }
-  );
+    );
   }
 
 }
