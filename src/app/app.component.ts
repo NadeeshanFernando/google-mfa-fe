@@ -36,14 +36,13 @@ export class AppComponent implements OnInit {
   }
 
   login() {
+    this.msg = ''
     this.qrImageData = ''
     this.loginService.login(this.loginForm.value).subscribe(
       (response) => {
-        this.msg = "Login Success!"
-        this.generateQR();
+        this.generateQR(this.user.username);
       },
       (error) => {
-        console.error(error);
         if (error.status === 401) {
           this.msg = "Invalid username and password!"
         }
@@ -54,11 +53,12 @@ export class AppComponent implements OnInit {
     );
   }
 
-  generateQR() {
-    this.loginService.generateQR().subscribe(
+  generateQR(username:any) {
+    this.loginService.generateQR(username).subscribe(
       (data) => {
         // Assign QR image data to qrImageData
-        this.qrImageData = 'data:image/png;base64,' + data.qrImageBase64; // Assuming data is in base64 format
+        this.msg = data.message
+        this.qrImageData = 'data:image/png;base64,' + data.data; // Assuming data is in base64 format
       },
       (error) => {
         console.error(error);
@@ -68,7 +68,7 @@ export class AppComponent implements OnInit {
   }
 
   ValidateCode() {
-    this.loginService.validateCode(this.validateCodeForm.value).subscribe(
+    this.loginService.validateCode(this.user.username,this.validateCodeForm.value).subscribe(
       (response) => {
         this.validateCodeRes = response.access_token
       },

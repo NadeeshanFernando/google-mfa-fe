@@ -16,15 +16,14 @@ export class LoginService {
     return this.http.post<any>(`${this.baseUrl}/login`, data)
   }
 
-  generateQR(): Observable<any> {
-    const key = sessionStorage.getItem('secretkey')
-    const url = `${this.baseUrl}/generate-qr/${key}`
+  generateQR(username:any): Observable<any> {
+    console.log("username: ", username)
+    const url = `${this.baseUrl}/generate-qr/${username}`
     return this.http.get<any>(url);
   }
 
-  validateCode(data:any): Observable<any> {
-    const key = sessionStorage.getItem('secretkey')
-    const url = `${this.baseUrl}/validate-code?secretKey=${key}&code=${data.code}`
+  validateCode(username:any, code:any): Observable<any> {
+    const url = `${this.baseUrl}/validate-code?username=${username}&code=${code.code}`
     return this.http.post<any>(url,null);
   }
 }
