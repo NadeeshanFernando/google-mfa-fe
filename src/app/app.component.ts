@@ -53,7 +53,7 @@ export class AppComponent implements OnInit {
     );
   }
 
-  generateQR(username:any) {
+  generateQR(username: any) {
     this.loginService.generateQR(username).subscribe(
       (data) => {
         // Assign QR image data to qrImageData
@@ -61,25 +61,20 @@ export class AppComponent implements OnInit {
         this.qrImageData = 'data:image/png;base64,' + data.data; // Assuming data is in base64 format
       },
       (error) => {
-        console.error(error);
         this.toastr.error("Error occurred while generating QR code.");
       }
     );
   }
 
   ValidateCode() {
-    this.loginService.validateCode(this.user.username,this.validateCodeForm.value).subscribe(
+    localStorage.clear()
+    this.loginService.validateCode(this.user.username, this.validateCodeForm.value.code).subscribe(
       (response) => {
-        this.validateCodeRes = response.access_token
+        this.validateCodeRes = response.message
+        localStorage.setItem("access_token", response.data.access_token)
       },
       (error) => {
-        console.error(error);
-        if (error.status === 401) {
-          this.validateCodeRes = "Invalid code!"
-        }
-        else {
-          this.validateCodeRes = "Error Occurred!"
-        }
+        this.validateCodeRes = error.error.message
       }
     );
   }
