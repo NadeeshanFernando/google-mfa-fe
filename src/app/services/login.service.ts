@@ -16,6 +16,10 @@ export class LoginService {
     return this.http.post<any>(`${this.baseUrl}/login`, data)
   }
 
+  register(data: any): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/create-user`, data)
+  }
+
   generateQR(username:any): Observable<any> {
     const data = { username: username };
     return this.http.post<any>(`${this.baseUrl}/generate-qr`, data);

@@ -53,6 +53,24 @@ export class AppComponent implements OnInit {
     );
   }
 
+  register(){
+    this.msg = ''
+    this.qrImageData = ''
+    this.loginService.register(this.loginForm.value).subscribe(
+      (response) => {
+        this.msg = response.message;
+      },
+      (error) => {
+        if (error.status === 409) {
+          this.msg = error.error.message
+        }
+        else {
+          this.msg = "Error Occurred!"
+        }
+      }
+    );
+  }
+
   generateQR(username: any) {
     this.loginService.generateQR(username).subscribe(
       (data) => {
